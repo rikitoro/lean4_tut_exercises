@@ -128,3 +128,102 @@ section
     have hsbb := hbarber.mpr hnsbb
     hnsbb hsbb
 end
+
+
+section
+  open Classical
+
+  variable (α : Type) (p q : α → Prop)
+  variable (r : Prop)
+
+  example : (∃ _ : α, r) → r := 
+    fun h =>
+      match h with
+      | ⟨_, hr⟩ => hr 
+
+  example (a : α) : r → (∃ _ : α, r) := 
+    fun hr => ⟨a, hr⟩
+
+  example : (∃ x, p x ∧ r) ↔ (∃ x, p x) ∧ r := 
+    Iff.intro
+    (
+      fun h =>
+        match h with
+        | ⟨w, hpxr⟩ => ⟨⟨w, hpxr.left⟩, hpxr.right⟩
+    )
+    (
+      fun h =>
+        match h.left with
+        | ⟨w, hpx⟩ => ⟨w, ⟨hpx, h.right⟩⟩
+    )
+
+  example : (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ (∃ x, q x) := 
+    Iff.intro
+    (
+      fun h =>
+        match h with
+        | ⟨w, hpwqw⟩ => 
+            Or.elim hpwqw
+            (
+              fun hpw =>
+                Or.inl ⟨w, hpw⟩
+            )
+            (
+              fun hqw =>
+                Or.inr ⟨w, hqw⟩
+            )
+    )
+    (
+      fun h =>
+        Or.elim h
+        (
+          fun hp : ∃ x, p x =>
+            match hp with
+            | ⟨w, hpw⟩ => ⟨w, Or.inl hpw⟩
+        )
+        (
+          fun hq : ∃ x, q x => 
+            match hq with
+            | ⟨w, hqw⟩ => ⟨w, Or.inr hqw⟩
+        )
+
+    )
+
+  example : (∀ x, p x) ↔ ¬ (∃ x, ¬ p x) := 
+    Iff.intro
+    (
+      fun h : ∀ x, p x =>
+        fun hnp : ∃ x, ¬ p x =>
+          match hnp with
+          | ⟨w, hnpw⟩ => 
+              let hpw := h w
+              absurd hpw hnpw
+    )
+    (
+      fun h : ¬ (∃ x, ¬ p x) =>
+        fun x =>
+          Or.elim (em $ p x)
+          (
+            fun hpx : p x =>
+              hpx
+          )
+          (
+            fun hnpx : ¬ p x =>
+              have hnp := ⟨x, hnpx⟩
+              absurd hnp h
+          )
+    )
+
+  example : (∃ x, p x) ↔ ¬ (∀ x, ¬ p x) := sorry
+
+  example : (¬ ∃ x, p x) ↔ (∀ x, ¬ p x) := sorry
+  
+  example : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) := sorry
+
+  example : (∀ x, p x → r) ↔ (∃ x, p x) → r := sorry
+  
+  example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r := sorry
+  
+  example (a : α) : (∃ x, r → p x) ↔ (r → ∃ x, p x) := sorry
+
+end
