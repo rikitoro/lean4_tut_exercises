@@ -214,12 +214,56 @@ section
           )
     )
 
-  example : (∃ x, p x) ↔ ¬ (∀ x, ¬ p x) := sorry
+  example : (∃ x, p x) ↔ ¬ (∀ x, ¬ p x) := 
+    Iff.intro
+    (
+      fun hExpx =>
+        fun hAxnpx =>
+          match hExpx with
+          | ⟨w, pw⟩ => hAxnpx w pw
+              
+    )
+    (
+      fun hnAxnpx => sorry 
+    )
 
-  example : (¬ ∃ x, p x) ↔ (∀ x, ¬ p x) := sorry
+
+  example :¬ (∃ x, p x) ↔ (∀ x, ¬ p x) := 
+    Iff.intro
+    (
+      fun hnExpx => 
+        fun x =>
+          Or.elim (em $ p x)
+          (
+            fun hpx => 
+              have hExpx := ⟨x, hpx⟩
+              absurd hExpx hnExpx
+          )
+          (
+            fun hnpx =>
+              hnpx 
+          )
+    )
+    (
+      fun hAxnpx =>
+        fun hExpx =>
+          match hExpx with
+          | ⟨w, hpw⟩ => 
+              hAxnpx w hpw
+    )
   
-  example : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) := sorry
-
+  example : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) := 
+    Iff.intro
+    (
+      fun hnAxpx => sorry
+    )
+    (
+      fun Exnpx =>
+        match Exnpx with
+        | ⟨w, hnpw⟩ =>
+            fun hAxpx =>
+              hnpw <| hAxpx w
+    )
   example : (∀ x, p x → r) ↔ (∃ x, p x) → r := sorry
   
   example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r := sorry
