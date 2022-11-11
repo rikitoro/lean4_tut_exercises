@@ -224,7 +224,18 @@ section
               
     )
     (
-      fun hnAxnpx => sorry 
+      fun hnAxnpx => 
+        byContradiction
+        (
+          fun hnExpx =>
+            have hAxnpx :=
+              fun x => 
+                fun hpx =>
+                  have hExpx := ⟨x, hpx⟩
+                  absurd hExpx hnExpx
+            absurd hAxnpx hnAxnpx 
+        )
+        
     )
 
 
@@ -255,7 +266,11 @@ section
   example : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) := 
     Iff.intro
     (
-      fun hnAxpx => sorry
+      fun hnAxpx => 
+        byContradiction
+        (
+          fun hnExnpx => sorry
+        )
     )
     (
       fun Exnpx =>
