@@ -72,13 +72,124 @@ section
               exact Or.inr hr
 
   -- distributivity
-  example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := sorry
-  example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := sorry
+  example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := by
+    apply Iff.intro
+    . intro h   
+      have hp := h.left
+      have hqr := h.right
+      cases hqr with
+      | inl hq => 
+        have hpq := And.intro hp hq
+        exact Or.inl hpq
+      | inr hr =>
+        have hpr := And.intro hp hr 
+        exact Or.inr hpr
+    . intro h
+      apply And.intro 
+      . cases h with
+        | inl hpq => 
+          exact hpq.left
+        | inr hpr => 
+          exact hpr.left
+      . cases h with
+        | inl hpq =>
+          have hq := hpq.right
+          exact Or.inl hq
+        | inr hpr =>
+          have hr := hpr.right
+          exact Or.inr hr
+
+  example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := by
+    apply Iff.intro
+    . intro h
+      apply And.intro
+      . cases h with
+        | inl hp =>
+          exact Or.inl hp
+        | inr hqr =>
+          have hq := hqr.left 
+          exact Or.inr hq
+      . cases h with
+        | inl hp => 
+          exact Or.inl hp
+        | inr hqr => 
+          have hr := hqr.right
+          exact Or.inr hr
+    . intro h 
+      have hpq := h.left
+      have hpr := h.right
+      cases hpq with
+      | inl hp => 
+        exact Or.inl hp
+      | inr hq => 
+        cases hpr with
+        | inl hp => 
+          apply Or.inl
+          exact hp
+        | inr hr => 
+          have hqr := And.intro hq hr
+          apply Or.inr
+          exact hqr
 
   -- other properties
-  example : (p → (q → r)) ↔ (p ∧ q → r) := sorry
-  example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) := sorry
-  example : ¬(p ∨ q) ↔ ¬p ∧ ¬q := sorry
+  example : (p → (q → r)) ↔ (p ∧ q → r) := by
+    apply Iff.intro
+    . intros hpqr hpq
+      have hp := hpq.left
+      have hq := hpq.right
+      have hqr := hpqr hp
+      have hr := hqr hq
+      exact hr
+    . intros hpqr hp hq
+      have hpq := And.intro hp hq
+      have hr := hpqr hpq
+      exact hr
+
+  example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) := by
+    apply Iff.intro
+    case mp => 
+      intro hpqr
+      apply And.intro
+      case left => 
+        intro hp
+        have hpq := Or.intro_left q hp 
+        have hr := hpqr hpq
+        assumption
+      case right => 
+        intro hq
+        have hpq := Or.intro_right p hq
+        have hr := hpqr hpq
+        assumption
+    case mpr => 
+      intros hprqr hpq
+      have hpr := hprqr.left 
+      have hqr := hprqr.right
+      cases hpq with
+      | inl hp => 
+        have hr := hpr hp
+        assumption
+      | inr hq => 
+        have hr := hqr hq
+        assumption 
+
+  example : ¬(p ∨ q) ↔ ¬p ∧ ¬q := by
+    apply Iff.intro
+    . intro hnpq
+      apply And.intro
+      . intro hp 
+        have hpq := Or.intro_left q hp
+        exact absurd hpq hnpq
+      . intro hq 
+        have hpq := Or.intro_right p hq 
+        exact absurd hpq hnpq
+    . intro hnpnq hpq
+      cases hpq with
+      | inl hp =>
+        exact hnpnq.left hp 
+      | inr hq =>
+        exact hnpnq.right hq
+
+
   example : ¬p ∨ ¬q → ¬(p ∧ q) := sorry
   example : ¬(p ∧ ¬p) := sorry
   example : p ∧ ¬q → ¬(p → q) := sorry
