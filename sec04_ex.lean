@@ -238,7 +238,6 @@ section
         
     )
 
-
   example :¬ (∃ x, p x) ↔ (∀ x, ¬ p x) := 
     Iff.intro
     (
@@ -265,12 +264,41 @@ section
   
   example : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) := 
     Iff.intro
-    (
+    ( 
+      fun hnAxpx : ¬(∀ x, p x) =>
+        Or.elim (em $ ∃ x, ¬ p x)
+        (
+          fun hExnpx : ∃ x, ¬ p x =>
+            hExnpx
+        )
+        ( 
+          fun hnExnpx : ¬ ∃ x, ¬ p x =>
+            have hAxpx : ∀ x, p x :=
+              fun x =>
+                show p x from
+                  Or.elim (em $ p x)
+                  (
+                    fun hpx : p x => hpx
+                  )
+                  (
+                    fun hnpx : ¬ p x =>
+                      have hExnpx :∃ x, ¬ p x := ⟨x, hnpx⟩
+                      absurd hExnpx hnExnpx
+                  )
+            absurd hAxpx hnAxpx                
+        )
+      /-
       fun hnAxpx => 
         byContradiction
-        (
-          fun hnExnpx => sorry
-        )
+          fun hnExnpx =>
+            have hAxpx :=
+              fun x =>
+                byContradiction
+                  fun hnpx => 
+                    have hExnpx := ⟨x, hnpx⟩
+                    absurd hExnpx hnExnpx
+            absurd hAxpx hnAxpx
+      -/
     )
     (
       fun Exnpx =>
@@ -280,6 +308,7 @@ section
             fun hAxpx =>
               hnpw <| hAxpx w
     )
+
   example : (∀ x, p x → r) ↔ (∃ x, p x) → r :=
     Iff.intro
     (
@@ -306,7 +335,8 @@ section
             hpwr hpw
     )
     (
-      sorry
+      fun Axpxr =>
+        sorry
     )
 
   example (a : α) : (∃ x, r → p x) ↔ (r → ∃ x, p x) := 
