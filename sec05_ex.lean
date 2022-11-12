@@ -248,5 +248,39 @@ section
     intro hpq hnq hp 
     have hq := hpq hp 
     exact hnq hq
-    
+
 end
+
+section
+  variable (α : Type) (p q : α → Prop)
+
+  example : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ (∀ x, q x) := by
+    apply Iff.intro 
+    . intros hAxpxqx
+      apply And.intro
+      . intro x
+        have hpxqx := hAxpxqx x
+        exact hpxqx.left
+      . intro x
+        have hpxqx := hAxpxqx x
+        exact hpxqx.right
+    . intro h 
+      have hAxpx := h.left 
+      have hAxqx := h.right 
+      intro x
+      have px := hAxpx x 
+      have qx := hAxqx x 
+      apply And.intro
+      . exact px
+      . exact qx
+
+  example : (∀ x, p x → q x) → (∀ x, p x) → (∀ x, q x) := by
+    intros hAxpxqx hAxpx x
+    have hpx := hAxpx x
+    have hpxqx := hAxpxqx x 
+    have hqx := hpxqx hpx
+    exact hqx
+
+end
+
+
