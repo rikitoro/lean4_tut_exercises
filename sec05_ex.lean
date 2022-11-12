@@ -190,12 +190,63 @@ section
         exact hnpnq.right hq
 
 
-  example : ¬p ∨ ¬q → ¬(p ∧ q) := sorry
-  example : ¬(p ∧ ¬p) := sorry
-  example : p ∧ ¬q → ¬(p → q) := sorry
-  example : ¬p → (p → q) := sorry
-  example : (¬p ∨ q) → (p → q) := sorry
-  example : p ∨ False ↔ p := sorry
-  example : p ∧ False ↔ False := sorry
-  example : (p → q) → (¬q → ¬p) := sorry
+  example : ¬p ∨ ¬q → ¬(p ∧ q) := by
+    intro hnpnq hpq
+    cases hnpnq with
+    | inl hnp =>
+      exact hnp hpq.left
+    | inr hnq =>
+      exact hnq hpq.right
+
+  example : ¬(p ∧ ¬p) := by
+    intro hpnp
+    have hnp := hpnp.right 
+    have hp := hpnp.left 
+    exact hnp hp
+
+  example : p ∧ ¬q → ¬(p → q) := by
+    intro hpnq hpq
+    have hp := hpnq.left
+    have hnq := hpnq.right
+    have hq := hpq hp 
+    exact hnq hq
+
+  example : ¬p → (p → q) := by
+    intro hnp hp 
+    exact absurd hp hnp
+
+  example : (¬p ∨ q) → (p → q) := by
+    intro hnpq hp 
+    cases hnpq with
+    | inl hnp => 
+      exact absurd hp hnp
+    | inr hq => 
+      exact hq
+
+  example : p ∨ False ↔ p := by
+    apply Iff.intro
+    . intro hpf
+      cases hpf with
+      | inl hp =>
+        exact hp
+      | inr hf =>
+        exact False.elim hf
+    . intro hp
+      apply Or.inl
+      exact hp
+
+  example : p ∧ False ↔ False := by
+    apply Iff.intro
+    . intro hpf
+      exact hpf.right
+    . intro hf
+      apply And.intro
+      . exact False.elim hf
+      . exact hf 
+
+  example : (p → q) → (¬q → ¬p) := by
+    intro hpq hnq hp 
+    have hq := hpq hp 
+    exact hnq hq
+    
 end
