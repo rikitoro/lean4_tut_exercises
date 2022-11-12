@@ -275,14 +275,52 @@ section
     (
       fun Exnpx =>
         match Exnpx with
+
         | ⟨w, hnpw⟩ =>
             fun hAxpx =>
               hnpw <| hAxpx w
     )
-  example : (∀ x, p x → r) ↔ (∃ x, p x) → r := sorry
+  example : (∀ x, p x → r) ↔ (∃ x, p x) → r :=
+    Iff.intro
+    (
+      fun hAxpxr => 
+        fun hExpx =>
+          match hExpx with
+          | ⟨w, hpw⟩ =>
+            have hpwr := hAxpxr w
+            have hr := hpwr hpw
+            hr
+    )
+    (
+      fun hExpxr => sorry         
+    )
   
-  example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r := sorry
-  
-  example (a : α) : (∃ x, r → p x) ↔ (r → ∃ x, p x) := sorry
+  example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r := 
+    Iff.intro 
+    (
+      fun hExpxr =>
+        fun hApx =>
+          match hExpxr with
+          | ⟨w, hpwr⟩ =>
+            have hpw := hApx w
+            hpwr hpw
+    )
+    (
+      sorry
+    )
+
+  example (a : α) : (∃ x, r → p x) ↔ (r → ∃ x, p x) := 
+    Iff.intro
+    (
+      fun hExrpx =>
+        match hExrpx with
+        | ⟨w, hrpw⟩ =>
+          fun hr =>
+            have hpw := hrpw hr
+            ⟨w, hpw⟩
+    )
+    (
+      sorry
+    )
 
 end

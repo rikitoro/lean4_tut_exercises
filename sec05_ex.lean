@@ -282,5 +282,3 @@ section
     exact hqx
 
 end
-
-
