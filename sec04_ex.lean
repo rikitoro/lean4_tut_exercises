@@ -129,6 +129,29 @@ section
     hnsbb hsbb
 end
 
+section
+  def even (n : Nat) : Prop := 
+    ∃ k : Nat, n = 2 * k
+
+  def prime (n : Nat) : Prop := 
+    let divides (x y : Nat) : Prop := 
+      ∃ k : Nat, k * x = y
+    ∀ m : Nat, divides m n → m = 1 ∨ m = n
+
+  def infinitely_many_primes : Prop := 
+    ∀ n : Nat, (∃ p : Nat, prime p ∧ p > n)
+
+  def Fermat_prime (n : Nat) : Prop := sorry
+
+  def infinitely_many_Fermat_primes : Prop := sorry
+
+  def goldbach_conjecture : Prop := sorry
+
+  def Goldbach's_weak_conjecture : Prop := sorry
+
+  def Fermat's_last_theorem : Prop := sorry
+
+end
 
 section
   open Classical
