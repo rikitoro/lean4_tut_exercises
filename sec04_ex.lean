@@ -346,11 +346,14 @@ section
     (
       fun hExpxr : (∃ x, p x) → r => 
         show ∀ x, p x → r from
-        byContradiction
-          fun hnAxpxr : ¬ ∀ x, p x → r =>
-            show False from
-              sorry              
-      )
+          fun x =>
+            show p x → r from
+              fun hpx : p x =>
+                show r from
+                  have hExpx : ∃ x, p x := ⟨x, hpx⟩
+                  have hr := hExpxr hExpx
+                  hr
+    )
   
   example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r := 
     Iff.intro 
