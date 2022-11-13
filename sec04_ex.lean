@@ -267,10 +267,18 @@ section
     Iff.intro
     (
       fun hnAxpx => 
-        byContradiction
-        (
-          fun hnExnpx => sorry
-        )
+        have hAxpx :=
+          fun x =>
+            Or.elim (em $ p x)
+            (
+              fun hpx =>
+                hpx
+            )
+            (
+              fun hnpx =>
+                
+            )
+
     )
     (
       fun Exnpx =>
