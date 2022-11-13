@@ -366,8 +366,11 @@ section
             hpwr hpw
     )
     (
-      fun Axpxr =>
-        sorry
+      fun Axpxr : (∀ x, p x) → r =>
+        show ∃ x, p x → r from sorry
+          
+
+        
     )
 
   example (a : α) : (∃ x, r → p x) ↔ (r → ∃ x, p x) := 
@@ -381,7 +384,11 @@ section
             ⟨w, hpw⟩
     )
     (
-      sorry
+      fun hrExpx : r → ∃ x, p x =>
+        show ∃ x, r → p x from
+          byContradiction
+            fun hnExrpx : ¬ ∃ x, r → p x =>
+            sorry
     )
 
 end
