@@ -349,10 +349,8 @@ section
         byContradiction
           fun hnAxpxr : ¬ ∀ x, p x → r =>
             show False from
-            fun x 
-
-
-    )
+              sorry              
+      )
   
   example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r := 
     Iff.intro 
