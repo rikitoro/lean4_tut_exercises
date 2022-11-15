@@ -264,7 +264,7 @@ section
   example :¬ (∃ x, p x) ↔ (∀ x, ¬ p x) := 
     Iff.intro
     (
-      fun hnExpx => 
+      fun hnExpx : ¬ (∃ x, p x) =>
         fun x =>
           Or.elim (em $ p x)
           (
@@ -366,11 +366,23 @@ section
             hpwr hpw
     )
     (
-      fun Axpxr : (∀ x, p x) → r =>
-        show ∃ x, p x → r from sorry
-          
-
-        
+      fun hAxpxr : (∀ x, p x) → r =>
+        show ∃ x, p x → r from 
+          byContradiction
+            fun hnExpxr : ¬ ∃ x, p x → r =>
+              have hAxnpxr : ∀ x, ¬ (p x → r) := 
+                fun x => 
+                  Or.elim (em $ p x → r)
+                  (
+                    fun pxr =>
+                      have hExnpxr : ∃ x, p x → r := ⟨x, pxr⟩
+                      absurd hExnpxr hnExpxr
+                  )
+                  (
+                    fun hnpxr => hnpxr
+                  )
+              have hnAxpxr : ¬ ((∀ x, p x) → r) := sorry 
+              absurd hAxpxr hnAxpxr
     )
 
   example (a : α) : (∃ x, r → p x) ↔ (r → ∃ x, p x) := 
