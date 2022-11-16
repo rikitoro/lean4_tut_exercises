@@ -251,6 +251,53 @@ section
 
 end
 
+
+section
+  open Classical
+
+  variable (p q r : Prop)
+
+  example : (p → q ∨ r) → ((p → q) ∨ (p → r)) := by
+    intro hpqr
+    apply Or.elim (em q)
+    . intro hq
+      apply Or.inl
+      intro hp
+      exact hq
+    . intro hnq
+      apply Or.inr
+      intro hp 
+      have hqr := hpqr hp
+      cases hqr with
+      | inl hq => contradiction
+      | inr hr => assumption
+
+  example : ¬(p ∧ q) → ¬p ∨ ¬q := by
+    intro hnpq 
+    apply Or.elim (em p)
+    . intro hp
+      apply Or.inr
+      intro hq
+      have hpq := And.intro hp hq
+      contradiction      
+    . intro hnp
+      apply Or.inl
+      assumption
+
+  example : ¬(p → q) → p ∧ ¬q := sorry
+
+  example : (p → q) → (¬p ∨ q) := sorry
+
+  example : (¬q → ¬p) → (p → q) := sorry
+
+  example : p ∨ ¬p := sorry
+
+  example : (((p → q) → p) → p) := sorry
+
+
+end
+
+
 section
   variable (α : Type) (p q : α → Prop)
 
