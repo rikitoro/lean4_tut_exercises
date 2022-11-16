@@ -408,9 +408,7 @@ section
     (
       fun hrExpx : r → ∃ x, p x =>
         show ∃ x, r → p x from
-          byContradiction
-            fun hnExrpx : ¬ ∃ x, r → p x =>
-            sorry
+          sorry
     )
 
 end
