@@ -153,9 +153,13 @@ section
         prime p ∧ prime q ∧ 
         (even n ∧ n > 2 → n = p + q))
 
-  def Goldbach's_weak_conjecture : Prop := sorry
+  def Goldbach's_weak_conjecture : Prop := 
+    ∀ n : Nat, 
+      (∃ p q r : Nat, prime p ∧ prime q ∧ prime r ∧
+      (¬ even n ∧ n > 5 → n = p + q + r))
 
-  def Fermat's_last_theorem : Prop := sorry
+  def Fermat's_last_theorem : Prop := 
+    ∀ n a b c : Nat, n > 2 → a ^ n + b ^ n ≠ c ^ n
 
 end
 
