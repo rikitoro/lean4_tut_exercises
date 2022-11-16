@@ -284,7 +284,27 @@ section
       apply Or.inl
       assumption
 
-  example : ¬(p → q) → p ∧ ¬q := sorry
+  example : ¬(p → q) → p ∧ ¬q := by
+    intro hnpq
+    apply Or.elim (em p) 
+    . intro hp 
+      apply Or.elim (em q)
+      . intro hq
+        apply And.intro
+        . assumption
+        . have hpq : p → q := fun hp => hq
+          contradiction
+      . intro hnq
+        apply And.intro  <;> assumption
+    . intro hnp
+      apply Or.elim (em q)
+      . intro hq 
+        have hpq : p → q := fun hp => hq 
+        contradiction
+      . intro hnq
+        have hpq : p → q := fun hp => absurd hp hnp
+        contradiction
+  
 
   example : (p → q) → (¬p ∨ q) := sorry
 
