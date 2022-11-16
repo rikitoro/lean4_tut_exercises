@@ -141,11 +141,17 @@ section
   def infinitely_many_primes : Prop := 
     ∀ n : Nat, (∃ p : Nat, prime p ∧ p > n)
 
-  def Fermat_prime (n : Nat) : Prop := sorry
+  def Fermat_prime (n : Nat) : Prop := 
+    ∃ k : Nat, prime n ∧ n = 2 ^ k + 1
 
-  def infinitely_many_Fermat_primes : Prop := sorry
+  def infinitely_many_Fermat_primes : Prop := 
+    ∀ n : Nat, (∃ p : Nat, Fermat_prime p ∧ p > n)
 
-  def goldbach_conjecture : Prop := sorry
+  def goldbach_conjecture : Prop := 
+    ∀ n : Nat, 
+      (∃ p q : Nat, 
+        prime p ∧ prime q ∧ 
+        (even n ∧ n > 2 → n = p + q))
 
   def Goldbach's_weak_conjecture : Prop := sorry
 
