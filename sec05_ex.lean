@@ -314,7 +314,6 @@ section
 
   example : (((p → q) → p) → p) := sorry
 
-
 end
 
 
