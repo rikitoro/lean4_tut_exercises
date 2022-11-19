@@ -393,4 +393,30 @@ section
 
 end
 
+section
+  open Classical
 
+  variable (α : Type) (p q : α → Prop)
+  variable (r : Prop)
+
+  example : α → ((∀ _ : α, r) ↔ r) := by 
+    intro hα
+    apply Iff.intro
+    . intro hαr
+      exact hαr hα
+    . intro hr
+      intro
+      assumption
+end
+
+section
+  variable (men : Type) (barber : men)
+  variable (shaves : men → men → Prop)
+
+  example (h : ∀ x : men, shaves barber x ↔ ¬ shaves x x) : False := by 
+    have h1 := h barber
+    have h2 := fun hbb => h1.mp hbb hbb
+    have h3 := h1.mpr h2
+    contradiction
+
+end
