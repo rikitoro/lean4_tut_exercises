@@ -20,15 +20,14 @@ def pred (n : Nat) : Nat :=
 #eval pred 3
 
 def trunc_sub (m n : Nat) : Nat :=
-  match m with
-  | 0       => 0
-  | succ m' => 
-    match n with
-    | 0       => m
-    | succ n' => trunc_sub m' n'
+  match n with
+  | 0       => m
+  | succ n' => trunc_sub (pred m) n'
 
 #eval trunc_sub 10 3
 #eval trunc_sub 3 4
+#eval trunc_sub 0 2
+
 
 def exp (m n : Nat) : Nat :=
   match n with
