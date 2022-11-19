@@ -262,7 +262,7 @@ section
     apply Or.elim (em q)
     . intro hq
       apply Or.inl
-      intro hp
+      intro 
       exact hq
     . intro hnq
       apply Or.inr
@@ -292,25 +292,48 @@ section
       . intro hq
         apply And.intro
         . assumption
-        . have hpq : p → q := fun hp => hq
+        . have hpq : p → q := fun _ => hq
           contradiction
       . intro hnq
         apply And.intro  <;> assumption
     . intro hnp
       apply Or.elim (em q)
       . intro hq 
-        have hpq : p → q := fun hp => hq 
+        have hpq : p → q := fun _ => hq 
         contradiction
-      . intro hnq
+      . intro 
         have hpq : p → q := fun hp => absurd hp hnp
         contradiction
   
 
-  example : (p → q) → (¬p ∨ q) := sorry
+  example : (p → q) → (¬p ∨ q) := by
+    intro hpq
+    cases (em p) with
+    | inl hp =>
+      have hq := hpq hp 
+      apply Or.inr
+      assumption
+    | inr hq => 
+      apply Or.inl 
+      assumption
 
-  example : (¬q → ¬p) → (p → q) := sorry
-
-  example : p ∨ ¬p := sorry
+  example : (¬q → ¬p) → (p → q) := by
+    intro hnqnp hp 
+    cases (em q) with
+    | inl hq => 
+      assumption
+    | inr hnq =>
+      have hnp := hnqnp hnq
+      contradiction
+       
+  example : p ∨ ¬p := by
+  cases (em p) with
+  | inl hp => 
+    apply Or.inl
+    assumption
+  | inr hp =>
+    apply Or.inr
+    assumption
 
   example : (((p → q) → p) → p) := sorry
 
