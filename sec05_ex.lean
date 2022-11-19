@@ -327,15 +327,24 @@ section
       contradiction
        
   example : p ∨ ¬p := by
-  cases (em p) with
-  | inl hp => 
-    apply Or.inl
-    assumption
-  | inr hp =>
-    apply Or.inr
-    assumption
+    cases (em p) with
+    | inl hp => 
+      apply Or.inl
+      assumption
+    | inr hp =>
+      apply Or.inr
+      assumption
 
-  example : (((p → q) → p) → p) := sorry
+  example : (((p → q) → p) → p) := by
+    intro hpqp
+    cases (em p) with
+    | inl hp  => 
+      assumption
+    | inr hnp => 
+      have hpq : p → q := fun hp : p => absurd hp hnp
+      have hp : p := hpqp hpq
+      assumption
+
 
 end
 
