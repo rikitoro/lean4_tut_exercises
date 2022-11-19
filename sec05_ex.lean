@@ -379,6 +379,18 @@ section
     have hqx := hpxqx hpx
     exact hqx
 
+  example : (∀ x, p x) ∨ (∀ x, q x) → ∀ x, p x ∨ q x := by
+    intros hAxpxAxqx x
+    cases hAxpxAxqx with
+    | inl hAxpx => 
+      have hpx := hAxpx x
+      apply Or.inl
+      assumption
+    | inr hAxqx => 
+      have hqx := hAxqx x
+      apply Or.inr
+      assumption
+
 end
 
 
