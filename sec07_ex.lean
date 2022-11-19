@@ -39,7 +39,42 @@ def exp (m n : Nat) : Nat :=
 #eval exp 3 2
 #eval exp 0 0
 
-
 end Hidden1
+end
 
+section
+namespace Hidden2
+inductive List (α : Type u) where
+  | nil   : List α
+  | cons  : α → List α → List α
+  deriving Repr
+namespace List
+
+def append (as bs : List α)  : List α :=
+  match as with
+  | nil       => bs
+  | cons a as => cons a (append as bs)
+
+def length (as : List α) : Nat :=
+  match as with
+  | nil       => 0
+  | cons _ as => 1 + length as
+
+#eval length $ cons 3 $ cons 1 $ cons 4 $ cons 1 nil
+
+def reverse (as : List α) : List α :=
+  match as with
+  | nil       => as
+  | cons a as => append (reverse as) (cons a nil)
+
+#eval reverse $ cons 3 $ cons 1 $ cons 4 $ cons 1 nil
+
+
+example (s t : List α) : 
+  length (append s l) = length s + length l := by
+  sorry
+  
+
+end List
+end Hidden2
 end
