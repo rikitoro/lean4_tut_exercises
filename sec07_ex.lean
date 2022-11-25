@@ -104,37 +104,34 @@ end
 
 section
 namespace Hidden2
-inductive List (α : Type u) where
-  | nil   : List α
-  | cons  : α → List α → List α
-  deriving Repr
-namespace List
+open List
 
-def append (as bs : List α)  : List α :=
-  match as with
-  | nil       => bs
-  | cons a as => cons a (append as bs)
+def length : List α → Nat
+  | nil     => 0
+  | _ :: as => 1 + length as
 
-def length (as : List α) : Nat :=
-  match as with
-  | nil       => 0
-  | cons _ as => 1 + length as
+def reverse : List α → List α
+  | nil     => nil
+  | a :: as => reverse as ++ a :: nil
 
-#eval length $ cons 3 $ cons 1 $ cons 4 $ cons 1 nil
+#eval length $ (nil : List Nat)
+#eval length $ 1 :: 2 :: 3 :: nil
 
-def reverse (as : List α) : List α :=
-  match as with
-  | nil       => as
-  | cons a as => append (reverse as) (cons a nil)
-
-#eval reverse $ cons 3 $ cons 1 $ cons 4 $ cons 1 nil
+#eval reverse $ (nil : List Nat)
+#eval reverse $ 3 :: 1 :: 4 :: 1 :: nil
 
 
-example (s t : List α) : 
-  length (append s l) = length s + length l := by
-  sorry
+example (s t : List α) 
+  : length (s ++ t) = length s + length t :=
+  sorry 
   
+example (t : List α)
+  : length (reverse t) = length t :=
+  sorry
 
-end List
-end Hidden2
+example (t : List α)
+  : reverse (reverse t) = t :=
+  sorry
+
+end Hidden2 
 end
