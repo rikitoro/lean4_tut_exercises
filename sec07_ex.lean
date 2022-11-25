@@ -7,6 +7,7 @@ inductive List (α : Type u) where
 | cons  : α → List α → List α
 
 namespace List
+
 def append (as bs : List α) : List α :=
   match as with 
   | nil       => bs
@@ -32,7 +33,27 @@ theorem append_nil (as : List α) : append as nil = as :=
 
 theorem append_assoc (as bs cs : List α)
   : append (append as bs) cs = append as (append bs cs) :=
-  sorry
+  List.recOn
+  ( 
+    motive := fun as =>
+      append (append as bs) cs  = append as (append bs cs)
+  )
+  as 
+  (
+    show append (append nil bs) cs = append nil (append bs cs) from rfl
+  )
+  (
+    fun (a : α) (as : List α)
+      (ih : append (append as bs) cs = append as (append bs cs)) =>
+      show append (append (cons a as) bs) cs = append (cons a as) (append bs cs) from
+      calc
+        append (append (cons a as) bs) cs 
+          = append (cons a (append as bs)) cs := by rw [cons_append]
+        _ = cons a (append (append as bs) cs) := by rw [cons_append]
+        _ = cons a (append as (append bs cs)) := by rw [ih]
+        _ = append (cons a as) (append bs cs) := by rw [←cons_append]
+  )
+
 end List
 end Hidden
 end
