@@ -172,9 +172,23 @@ example (t : List α)
         _ = length (x :: t) := by rfl
   )
   
+theorem reverse_append (s t : List)
+  : reverse (s ++ t) = reverse t ++ reverse s := by
+  induction s with
+  | nil => 
+  | cons x s ih => 
+
+
+/-
 example (t : List α)
-  : reverse (reverse t) = t :=
-  sorry
+  : reverse (reverse t) = t := by
+  induction t with
+  | nil =>
+    rfl
+  | cons x t ih =>
+    rw [reverse]
+    rw [ih]
+-/
 
 end Hidden2 
 end
