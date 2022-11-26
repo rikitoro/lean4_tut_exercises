@@ -156,7 +156,7 @@ example (t : List α)
   )
   t
   (
-    show length (reverse nil) = length nil from rfl
+    show length (reverse nil) = length nil from by rfl
   )
   (
     fun (x : α)(t : List α)
@@ -172,23 +172,52 @@ example (t : List α)
         _ = length (x :: t) := by rfl
   )
   
-theorem reverse_append (s t : List)
-  : reverse (s ++ t) = reverse t ++ reverse s := by
-  induction s with
-  | nil => 
-  | cons x s ih => 
+theorem reverse_nil : reverse (nil : List α) = nil := rfl
+
+theorem reverse_append (s t : List α)
+  : reverse (s ++ t) = reverse t ++ reverse s := 
+  List.recOn
+  (
+    motive := fun s => reverse (s ++ t) = reverse t ++ reverse s
+  )
+  s
+  (
+    show reverse (nil ++ t) = reverse t ++ reverse nil from
+    calc
+      reverse (nil ++ t) = reverse t := by rw [nil_append]
+      _ = reverse t ++ nil := by rw [append_nil]
+      _ = reverse t ++ reverse nil := rfl
+  )
+  (
+    fun (x : α) (s : List α)
+      (ih : reverse (s ++ t) = reverse t ++ reverse s) => 
+      show reverse (x :: s ++ t) = reverse t ++ reverse (x :: s) from
+      calc
+        reverse (x :: s ++ t) 
+          = reverse (x :: (s ++ t)) := by rw [cons_append]
+        _ = reverse (s ++ t) ++ x :: nil := by rfl
+        _ = reverse t ++ reverse s ++ x :: nil := by rw [ih]
+        _ = reverse t ++ (reverse s ++ x :: nil) := by rw [append_assoc]
+        _ = reverse t ++ (reverse (x :: s)) := by rfl
+  )
 
 
-/-
 example (t : List α)
-  : reverse (reverse t) = t := by
-  induction t with
-  | nil =>
-    rfl
-  | cons x t ih =>
-    rw [reverse]
-    rw [ih]
--/
+  : reverse (reverse t) = t :=
+  List.recOn
+  (
+    motive := fun t => reverse (reverse t) = t
+  )
+  t
+  (
+    show reverse (reverse nil) = nil from by rfl
+  )
+  (
+    fun (x : α) (t : List α) 
+      (ih : reverse (reverse t) = t) => 
+      show reverse (reverse (x :: t)) = x :: t from sorry
+  )
+
 
 end Hidden2 
 end
