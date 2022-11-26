@@ -121,14 +121,57 @@ def reverse : List α → List α
 #eval reverse $ 3 :: 1 :: 4 :: 1 :: nil
 
 
-example (s t : List α) 
+theorem length_append (s t : List α) 
   : length (s ++ t) = length s + length t :=
-  sorry 
+  List.recOn
+  (
+    motive := fun s => 
+      length (s ++ t) = length s + length t
+  )
+  s
+  (
+    show length (nil ++ t) = length nil + length t from
+    calc 
+      length (nil ++ t) = length t := by rw [List.nil_append]
+      _ = 0 + length t := by rw [Nat.zero_add]
+      _ = length nil + length t := by rfl
+  )
+  (
+    fun (x : α) (s : List α)
+      (ih : length (s ++ t) = length s + length t) =>
+      show length (x :: s ++ t) = length (x :: s) + length t from
+      calc
+        length (x :: s ++ t) = length (x :: (s ++ t)) := by rw [cons_append]
+        _ = 1 + length (s ++ t) := by rfl
+        _ = 1 + (length s + length t) := by rw [ih]
+        _ = (1 + length s) + length t := by rw [Nat.add_assoc]
+        _ = length (x :: s) + length t := by rfl
+  )
   
 example (t : List α)
   : length (reverse t) = length t :=
-  sorry
-
+  List.recOn
+  (
+    motive := fun t => length (reverse t) = length t
+  )
+  t
+  (
+    show length (reverse nil) = length nil from rfl
+  )
+  (
+    fun (x : α)(t : List α)
+      (ih : length (reverse t) = length t) => 
+      show length (reverse (x :: t)) = length (x :: t) from
+      calc
+        length (reverse (x :: t)) 
+          = length (reverse t ++ x :: nil) := by rfl
+        _ = length (reverse t) + length (x :: nil) := by rw [length_append]
+        _ = length t + length (x :: nil) := by rw [ih]
+        _ = length t + 1 := by rfl
+        _ = 1 + length t := by rw [Nat.add_comm]
+        _ = length (x :: t) := by rfl
+  )
+  
 example (t : List α)
   : reverse (reverse t) = t :=
   sorry
