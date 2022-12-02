@@ -49,4 +49,19 @@ def sampleVal : Nat → Nat
 
 #eval eval sampleVal sampleExpr
 
+def simpConst : Expr → Expr
+  | plus (const n₁) (const n₂)    => const $ n₁ + n₂
+  | times (const n₁) (const n₂)   => const $ n₁ * n₂
+  | e                             => e
+
+def fuse : Expr → Expr
+  | plus e₁ e₂  => simpConst $ plus (fuse e₁) (fuse e₂)
+  | times e₁ e₂ => simpConst $ times (fuse e₁) (fuse e₂)
+  | e           => simpConst e
+
+#eval fuse $ const 2
+#eval fuse $ plus (const 2) (const 3)
+#eval fuse $ plus (var 1) (const 2)
+#eval fuse $ plus (times (const 2) (const 3)) (var 0)
+
 end ex5
