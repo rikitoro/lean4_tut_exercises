@@ -215,7 +215,16 @@ example (t : List α)
   (
     fun (x : α) (t : List α) 
       (ih : reverse (reverse t) = t) => 
-      show reverse (reverse (x :: t)) = x :: t from sorry
+      show reverse (reverse (x :: t)) = x :: t from 
+      calc 
+        reverse (reverse (x :: t)) = reverse (reverse t ++ x :: nil) := by rfl
+        _ = reverse (x :: nil) ++ reverse (reverse t) := by rw [reverse_append]
+        _ = reverse (x :: nil) ++ t := by rw [ih]
+        _ = reverse nil ++ x :: nil ++ t := by rfl
+        _ = nil ++ x :: nil ++ t := by rfl
+        _ = x :: nil ++ t := by rw [nil_append]
+        _ = x :: (nil ++ t) := by rfl
+        _ = x :: t := by rw [nil_append] 
   )
 
 
