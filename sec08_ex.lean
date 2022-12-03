@@ -66,12 +66,24 @@ def fuse : Expr → Expr
 
 theorem simpConst_eq (v : Nat → Nat)
         : ∀ e : Expr, eval v (simpConst e) = eval v e := by
-  intro he
-  induction he with 
+  intro e
+  induction e with 
   | const n     => rfl
   | var n       => rfl
-  | plus e₁ e₂  => sorry
-  | times e₁ e₂ => sorry
+  | plus e₁ e₂ ih1 ih2 => 
+    cases e₁ with
+    | const n => 
+      cases e₂ with
+      | const m => rfl
+      | _       => rfl
+    | _       => rfl
+  | times e₁ e₂ => 
+    cases e₁ with
+    | const n => 
+      cases e₂ with
+      | const m => rfl
+      | _       => rfl
+    | _       => rfl
 
 
 theorem fuse_eq (v : Nat → Nat)
