@@ -64,4 +64,19 @@ def fuse : Expr → Expr
 #eval fuse $ plus (var 1) (const 2)
 #eval fuse $ plus (times (const 2) (const 3)) (var 0)
 
+theorem simpConst_eq (v : Nat → Nat)
+        : ∀ e : Expr, eval v (simpConst e) = eval v e := by
+  intro he
+  induction he with 
+  | const n     => rfl
+  | var n       => rfl
+  | plus e₁ e₂  => sorry
+  | times e₁ e₂ => sorry
+
+
+theorem fuse_eq (v : Nat → Nat)
+        : ∀ e : Expr, eval v (fuse e) = eval v e := by 
+  sorry
+
+
 end ex5
