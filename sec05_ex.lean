@@ -422,9 +422,10 @@ section
 end
 
 
-section
+section ex2
+
 example (p q r : Prop) (hp :  p) 
   : (p ∨ q ∨ r) ∧ (q ∨ p ∨ r) ∧ (q ∨ r ∨ p) := by
-  sorry
+  repeat (constructor; repeat (first | apply Or.inl; assumption | apply Or.inr | assumption ))
 
-end
+end ex2
