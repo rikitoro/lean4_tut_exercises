@@ -69,8 +69,6 @@ theorem simpConst_eq (v : Nat → Nat)
         : ∀ e : Expr, eval v (simpConst e) = eval v e := by
   intro e
   cases e with 
-  | const n     => rfl
-  | var n       => rfl
   | plus e₁ e₂  => 
     cases e₁ with
     | const n =>
@@ -81,6 +79,7 @@ theorem simpConst_eq (v : Nat → Nat)
     | const n => 
       cases e₂ <;> rfl
     | _       => rfl
+  | _     => rfl
 
 theorem fuse_eq (v : Nat → Nat)
         : ∀ e : Expr, eval v (fuse e) = eval v e := by 
