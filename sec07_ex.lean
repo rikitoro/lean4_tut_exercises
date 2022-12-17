@@ -84,7 +84,7 @@ end List
 end Hidden
 end Other_Recursive_Data_Types
 
-/---------------------------------------/
+/- ------------------------------------- -/
 
 section Inductive_Families
 namespace Hidden'
@@ -116,7 +116,7 @@ theorem congr {α β : Type u} {a b : α} (f : α → β) (h : Eq a b)
 end Hidden'
 end Inductive_Families
 
-/---------------------------------------/
+/- ------------------------------------- -/
 
 section ex1
 namespace Hidden1
@@ -162,7 +162,7 @@ def exp (m n : Nat) : Nat :=
 end Hidden1
 end ex1 
 
-/---------------------------------------/
+/- ------------------------------------- -/
 
 section ex2
 namespace Hidden2
