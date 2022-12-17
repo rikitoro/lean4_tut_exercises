@@ -309,3 +309,45 @@ example (t : List α)
 
 end Hidden2 
 end ex2
+
+/- ------------------------------------- -/
+
+section ex3
+/- 
+Define an inductive data type 
+- const n,    a constant denoting the naturan number n
+- var n,      a variable, numbered n
+- plus s t,   the sum of s and t
+- times s t,  the product of s and t
+-/
+
+inductive Term where
+  | const : Nat → Term
+  | var   : Nat → Term
+  | plus  : Term → Term → Term
+  | times : Term → Term → Term
+
+open Term
+
+def eval (v : Nat → Nat) : Term → Nat
+  | const n   => n
+  | var n     => v n
+  | plus s t  => eval v s + eval v t
+  | times s t => eval v s * eval v t
+
+def const_3 : Term := const 3
+def v1 : Term := var 1
+def v2 : Term := var 2
+def t1 : Term := plus (const 3) v1
+def t2 : Term := times v2 t1
+def vs : Nat → Nat
+  | 1 => 4
+  | 2 => 5
+  | _ => 0
+#eval eval vs const_3
+#eval eval vs v1
+#eval eval vs t1
+#eval eval vs t2
+
+
+end ex3
