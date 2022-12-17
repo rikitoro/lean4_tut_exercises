@@ -1,10 +1,10 @@
 
-section
+section Other_Recursive_Data_Types
 namespace Hidden
 
 inductive List (α : Type u) where
-| nil   : List α
-| cons  : α → List α → List α
+  | nil   : List α
+  | cons  : α → List α → List α
 
 namespace List
 
@@ -13,7 +13,7 @@ def append (as bs : List α) : List α :=
   | nil       => bs
   | cons a as => cons a (append as bs)
 
-theorem nil_append (as : List α) : append nil as = as := 
+theorem nil_append (as : List α) : append nil as = as := by
   rfl
 
 theorem cons_append (a : α) (as bs : List α)
@@ -30,6 +30,17 @@ theorem append_nil (as : List α) : append as nil = as :=
         append (cons a as) nil = cons a (append as nil) := by rw [cons_append]
         _ = cons a as := by rw [ih]
     )
+
+-- tactics version
+theorem append_nil' (as : List α) : append as nil = as := by
+  induction as with
+    | nil => 
+      rfl
+    | cons a as' ih => 
+      calc
+        append (cons a as') nil = cons a (append as' nil) := by rfl
+        _ = cons a as' := by rw [ih]
+
 
 theorem append_assoc (as bs cs : List α)
   : append (append as bs) cs = append as (append bs cs) :=
@@ -54,11 +65,60 @@ theorem append_assoc (as bs cs : List α)
         _ = append (cons a as) (append bs cs) := by rw [←cons_append]
   )
 
+-- tactics version
+theorem append_assoc' (as bs cs : List α)
+  : append (append as bs) cs = append as (append bs cs) := by
+  induction as with
+  | nil => 
+    calc
+      append (append nil bs) cs = append nil (append bs cs) := by rfl
+  | cons a as' ih =>
+    -- show append (append (cons a as') bs) cs = append (cons a as') (append bs cs) from
+    calc 
+      append (append (cons a as') bs) cs = append (cons a (append as' bs)) cs := by rfl
+      _ = cons a (append (append as' bs) cs) := by rfl
+      _ = cons a (append as' (append bs cs)) := by rw [ih]
+      _ = append (cons a as') (append bs cs) := by rfl
+
 end List
 end Hidden
-end
+end Other_Recursive_Data_Types
 
-section
+/---------------------------------------/
+
+section Inductive_Families
+namespace Hidden'
+
+inductive Eq {α : Sort u} (a : α) : α → Prop where
+  | refl : Eq a a 
+
+theorem subst {α : Type u} {a b : α} {p : α → Prop} (h₁ : Eq a b) (h₂ : p a) 
+  : p b := by
+  induction h₁ with
+    | refl =>
+      exact h₂
+
+theorem symm {α : Type u} {a b : α} (h : Eq a b) 
+  : Eq b a := by 
+  induction h with
+    | refl => exact Eq.refl
+
+theorem trans {α : Type u} {a b c : α} (h₁ : Eq a b) (h₂ : Eq b c)
+  : Eq a c := by
+  induction h₁ with
+    | refl => assumption
+
+theorem congr {α β : Type u} {a b : α} (f : α → β) (h : Eq a b)
+  : Eq (f a) (f b) := by
+  induction h with
+    | refl => exact Eq.refl
+
+end Hidden'
+end Inductive_Families
+
+/---------------------------------------/
+
+section ex1
 namespace Hidden1
 open Nat
 
@@ -100,9 +160,11 @@ def exp (m n : Nat) : Nat :=
 #eval exp 0 0
 
 end Hidden1
-end
+end ex1 
 
-section
+/---------------------------------------/
+
+section ex2
 namespace Hidden2
 open List
 
@@ -147,6 +209,23 @@ theorem length_append (s t : List α)
         _ = (1 + length s) + length t := by rw [Nat.add_assoc]
         _ = length (x :: s) + length t := by rfl
   )
+
+-- tactics version 
+theorem length_append' (s t : List α)
+  : length (s ++ t) = length s + length t := by
+  induction s with
+  | nil => 
+    calc
+      length (nil ++ t) = length t := by rw [List.nil_append]
+      _ = 0 + length t := by rw [Nat.zero_add]
+      _ = length nil + length t := by rfl
+  | cons head tail ih =>
+    calc
+      length (head :: tail ++ t) = length (head :: (tail ++ t)) := by rfl
+      _ = 1 + length (tail ++ t) := by rfl
+      _ = 1 + (length tail + length t) := by rw [ih]
+      _ = 1 + length tail + length t := by simp [Nat.add_assoc]
+      _ = length (head :: tail) + length t := by rfl
   
 example (t : List α)
   : length (reverse t) = length t :=
@@ -229,4 +308,4 @@ example (t : List α)
 
 
 end Hidden2 
-end
+end ex2
