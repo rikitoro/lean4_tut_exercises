@@ -32,6 +32,20 @@ end Hidden
 end ex1
 
 
+section ex2 
+namespace Hidden2
+open List
+
+def reverse {α : Type} : List α → List α
+  | nil => nil
+  | x :: xs => reverse xs ++ [x]
+
+#eval reverse ([] : List Int)
+#eval reverse [1,2,3]
+
+end Hidden2
+end ex2
+
 
 section ex5
 
