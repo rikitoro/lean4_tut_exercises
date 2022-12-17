@@ -1,6 +1,12 @@
 /- Induction and Recursion -/ 
 
 section ex1
+
+/-
+Use the equation compiler to define addition multiplication and exponentiation on
+the natural numbers.
+Then use the equation compiler to derive some of their basic properties.
+-/
 namespace Hidden
 open Nat
 
@@ -18,12 +24,21 @@ def pow : Nat → Nat → Nat
   | _, zero   => succ zero
   | n, succ m => mul (pow n m) n
 
+theorem zero_add : ∀ m : Nat, add zero m = m
+  | zero => by rfl
+  | succ m' => sorry
 
 end Hidden
 end ex1
 
 
+
 section ex5
+
+/- 
+Consider following type of arithmetic expressions 
+-/
+
 inductive Expr where
   | const   : Nat → Expr
   | var     : Nat → Expr
@@ -35,6 +50,10 @@ open Expr
 
 def sampleExpr :=
   plus (times (var 0) (const 7)) (times (const 2) (var 1))
+
+/- 
+Write a function that evaluates such an expression 
+-/
 
 def eval (v : Nat → Nat) : Expr → Nat
   | const n     => n
@@ -48,6 +67,11 @@ def sampleVal : Nat → Nat
   | _ => 0
 
 #eval eval sampleVal sampleExpr
+
+
+/- 
+Implement "constant fustion", fuse, a procedure that simplifies subterms like 5 + 7 to 12
+-/
 
 def simpConst : Expr → Expr
   | plus (const n₁) (const n₂)    => const $ n₁ + n₂
@@ -81,7 +105,6 @@ theorem simpConst_eq (v : Nat → Nat)
     | _       => rfl
   | _     => rfl
 
-
 theorem fuse_eq (v : Nat → Nat)
   : ∀ e : Expr, eval v (fuse e) = eval v e := by 
   intro e
@@ -105,4 +128,7 @@ theorem fuse_eq (v : Nat → Nat)
       _ = eval v (fuse e₁) * eval v (fuse e₂) := by rfl
       _ = eval v e₁ * eval v e₂ := by rw [ih₁, ih₂]
 
+/-
+The lase two theorems show that the definitions preserve the value.
+-/
 end ex5
