@@ -81,9 +81,28 @@ theorem simpConst_eq (v : Nat → Nat)
     | _       => rfl
   | _     => rfl
 
-theorem fuse_eq (v : Nat → Nat)
-        : ∀ e : Expr, eval v (fuse e) = eval v e := by 
-  sorry
 
+theorem fuse_eq (v : Nat → Nat)
+  : ∀ e : Expr, eval v (fuse e) = eval v e := by 
+  intro e
+  induction e with
+  | const n => rfl
+  | var n => rfl
+  | plus e₁ e₂ ih₁ ih₂ => 
+    -- show eval v (fuse (plus e1 e2)) = eval v (plus e₁ e₂) from
+    calc
+      eval v (fuse (plus e₁ e₂)) 
+        = eval v (simpConst $ plus (fuse e₁) (fuse e₂)) := by rfl
+      _ = eval v (plus (fuse e₁) (fuse e₂)) := by rw [simpConst_eq]
+      _ = eval v (fuse e₁) + eval v (fuse e₂) := by rfl 
+      _ = eval v e₁ + eval v e₂ := by rw [ih₁, ih₂]
+  | times e₁ e₂ ih₁ ih₂ =>
+    -- show eval v (fuse (times e₁ e₂)) = eval v (times e₁ e₂) from
+    calc 
+      eval v (fuse (times e₁ e₂)) 
+        = eval v (simpConst $ times (fuse e₁) (fuse e₂)) := by rfl
+      _ = eval v (times (fuse e₁) (fuse e₂)) := by rw [simpConst_eq]
+      _ = eval v (fuse e₁) * eval v (fuse e₂) := by rfl
+      _ = eval v e₁ * eval v e₂ := by rw [ih₁, ih₂]
 
 end ex5
